@@ -1,4 +1,4 @@
-module helloworld
+module github.com/yuandrew/playground
 
 go 1.23.0
 
@@ -49,6 +49,6 @@ require (
 	google.golang.org/protobuf v1.34.2 // indirect
 )
 
-replace go.temporal.io/sdk/client => /Users/andrewyuan/temporal-sdk/go
+// replace go.temporal.io/sdk/client => /Users/andrewyuan/temporal-sdk/go
 
-replace github.com/temporalio/samples-go/helloworld => /Users/andrewyuan/temporal-sdk/go-playground-git
+// replace github.com/temporalio/samples-go/helloworld => /Users/andrewyuan/temporal-sdk/go-playground-git
