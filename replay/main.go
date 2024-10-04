@@ -8,7 +8,6 @@ import (
 
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/api/history/v1"
-	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
 	"go.temporal.io/sdk/workflow"
@@ -27,23 +26,22 @@ func Workflow(ctx workflow.Context, name string) (string, error) {
 
 	// return "", errors.New("try to fail a workflow")
 	var result string
-	// err := workflow.ExecuteActivity(ctx, Activity, name).Get(ctx, &result)
-	// if err != nil {
-	// 	logger.Error("Activity failed.", "Error", err)
-	// 	return "", err
-	// }
+	err := workflow.ExecuteActivity(ctx, Activity, name).Get(ctx, &result)
+	if err != nil {
+		logger.Error("Activity failed.", "Error", err)
+		return "", err
+	}
 	// time.Sleep(1 * time.Second)
 
 	logger.Info("HelloWorld workflow completed.", "result", result)
-	fmt.Println("result: ", result)
 
 	return result, nil
 }
 
 func Activity(ctx context.Context, name string) (string, error) {
-	logger := activity.GetLogger(ctx)
-	logger.Info("Activityasdf", "name", name)
-	return "Hello 1234" + name + "!", nil
+	// logger := activity.GetLogger(ctx)
+	// logger.Info("Activity", "name", name)
+	return "Hellosasdf " + name + "!", nil
 	// panic("FAIL LOCAL ACTIVITY")
 }
 func main() {
@@ -54,41 +52,14 @@ func main() {
 	}
 	defer c.Close()
 
-	workflowOptions := client.StartWorkflowOptions{
-		ID:        "hello_world_workflowID",
-		TaskQueue: "hello-world",
-		// RetryPolicy: &temporal.RetryPolicy{
-		// 	MaximumAttempts: 1,
-		// },
-	}
-
-	we, err := c.ExecuteWorkflow(context.Background(), workflowOptions, Workflow, "Temporal")
-	if err != nil {
-		log.Fatalln("Unable to execute workflow", err)
-	}
-
-	err = c.SignalWorkflow(context.Background(), "hello_world_workflowID", "", "signal-name", "signal-data")
-	if err != nil {
-		log.Fatalln("Signal workflow", err)
-	}
-
-	log.Println("Started workflow", "WorkflowID", we.GetID(), "RunID", we.GetRunID())
-	fmt.Println("Started workflow", "WorkflowID", we.GetID(), "RunID", we.GetRunID())
-
-	// Synchronously wait for the workflow completion.
-	var result string
-	err = we.Get(context.Background(), &result)
-	if err != nil {
-		log.Fatalln("Unable get workflow result", err)
-	}
-	log.Println("Workflow result:", result)
-
 	// Replay workflow
-	// fmt.Println("Replaying workflow")
-	// err = ReplayWorkflow(context.Background(), c, we.GetID(), we.GetRunID())
-	// if err != nil {
-	// 	log.Fatalln("Unable to replay workflow", err)
-	// }
+	fmt.Println("Replaying workflow")
+	// d7226966-0465-4e31-9fdd-36cc88c59446
+	// 0f7858a6-0953-4be1-bac5-6af0f2e9a897
+	err = ReplayWorkflow(context.Background(), c, "hello_world_workflowID", "45d87bda-4d79-4ce9-a206-4163f1ef759c")
+	if err != nil {
+		log.Fatalln("Unable to replay workflow", err)
+	}
 }
 
 func GetWorkflowHistory(ctx context.Context, client client.Client, id, runID string) (*history.History, error) {
@@ -105,11 +76,7 @@ func GetWorkflowHistory(ctx context.Context, client client.Client, id, runID str
 }
 
 func ReplayWorkflow(ctx context.Context, client client.Client, id, runID string) error {
-	newRunID := runID //""
-	// for _, v := range runID {
-	// 	newRunID = string(v) + newRunID
-	// }
-	hist, err := GetWorkflowHistory(ctx, client, id, newRunID)
+	hist, err := GetWorkflowHistory(ctx, client, id, runID)
 	if err != nil {
 		return err
 	}

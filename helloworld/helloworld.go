@@ -1,11 +1,8 @@
-package helloworld
+package main
 
 import (
-	"context"
-	"errors"
 	"time"
 
-	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/workflow"
 )
 
@@ -18,22 +15,25 @@ func Workflow(ctx workflow.Context, name string) (string, error) {
 
 	logger := workflow.GetLogger(ctx)
 	logger.Info("HelloWorld workflow started", "name", name)
-	return "", errors.New("try to fail a workflow")
+	// panic("try to fail a workflow")
 
-	// var result string
+	// return "", errors.New("try to fail a workflow")
+	var result string
 	// err := workflow.ExecuteActivity(ctx, Activity, name).Get(ctx, &result)
 	// if err != nil {
 	// 	logger.Error("Activity failed.", "Error", err)
 	// 	return "", err
 	// }
+	// time.Sleep(1 * time.Second)
 
-	// logger.Info("HelloWorld workflow completed.", "result", result)
+	logger.Info("HelloWorld workflow completed.", "result", result)
 
-	// return result, nil
+	return result, nil
 }
 
-func Activity(ctx context.Context, name string) (string, error) {
-	logger := activity.GetLogger(ctx)
-	logger.Info("Activity", "name", name)
-	return "Hello " + name + "!", nil
-}
+//	func Activity(ctx context.Context, name string) (string, error) {
+//		logger := activity.GetLogger(ctx)
+//		logger.Info("Activityasdf", "name", name)
+//		return "Hello " + name + "!", nil
+//		// panic("FAIL LOCAL ACTIVITY")
+//	}
