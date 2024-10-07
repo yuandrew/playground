@@ -56,7 +56,7 @@ func main() {
 	fmt.Println("Replaying workflow")
 	// d7226966-0465-4e31-9fdd-36cc88c59446
 	// 0f7858a6-0953-4be1-bac5-6af0f2e9a897
-	err = ReplayWorkflow(context.Background(), c, "hello_world_workflowID", "45d87bda-4d79-4ce9-a206-4163f1ef759c")
+	err = ReplayWorkflow(context.Background(), c, "hello_world_workflowID", "fa367a78-0cc8-4901-be0c-502c7d2b0b84")
 	if err != nil {
 		log.Fatalln("Unable to replay workflow", err)
 	}
