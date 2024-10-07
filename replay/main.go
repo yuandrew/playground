@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -53,10 +52,8 @@ func main() {
 	defer c.Close()
 
 	// Replay workflow
-	fmt.Println("Replaying workflow")
-	// d7226966-0465-4e31-9fdd-36cc88c59446
-	// 0f7858a6-0953-4be1-bac5-6af0f2e9a897
-	err = ReplayWorkflow(context.Background(), c, "hello_world_workflowID", "45d87bda-4d79-4ce9-a206-4163f1ef759c")
+	runID := "6e3f7f09-24e9-470b-9d62-0fa10c8659af"
+	err = ReplayWorkflow(context.Background(), c, "hello_world_workflowID", runID)
 	if err != nil {
 		log.Fatalln("Unable to replay workflow", err)
 	}

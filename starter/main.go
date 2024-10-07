@@ -23,16 +23,12 @@ func Workflow(ctx workflow.Context, name string) (string, error) {
 
 	logger := workflow.GetLogger(ctx)
 	logger.Info("HelloWorld workflow started", "name", name)
-	// panic("try to fail a workflow")
-
-	// return "", errors.New("try to fail a workflow")
 	var result string
-	// err := workflow.ExecuteActivity(ctx, Activity, name).Get(ctx, &result)
-	// if err != nil {
-	// 	logger.Error("Activity failed.", "Error", err)
-	// 	return "", err
-	// }
-	// time.Sleep(1 * time.Second)
+	err := workflow.ExecuteActivity(ctx, Activity, name).Get(ctx, &result)
+	if err != nil {
+		logger.Error("Activity failed.", "Error", err)
+		return "", err
+	}
 
 	logger.Info("HelloWorld workflow completed.", "result", result)
 	fmt.Println("result: ", result)
@@ -44,7 +40,6 @@ func Activity(ctx context.Context, name string) (string, error) {
 	logger := activity.GetLogger(ctx)
 	logger.Info("Activityasdf", "name", name)
 	return "Hello 1234" + name + "!", nil
-	// panic("FAIL LOCAL ACTIVITY")
 }
 func main() {
 	// The client is a heavyweight object that should be created once per process.
@@ -57,15 +52,16 @@ func main() {
 	workflowOptions := client.StartWorkflowOptions{
 		ID:        "hello_world_workflowID",
 		TaskQueue: "hello-world",
-		// RetryPolicy: &temporal.RetryPolicy{
-		// 	MaximumAttempts: 1,
-		// },
 	}
+
+	// temporal_workflow_task_execution_failed
 
 	we, err := c.ExecuteWorkflow(context.Background(), workflowOptions, Workflow, "Temporal")
 	if err != nil {
 		log.Fatalln("Unable to execute workflow", err)
 	}
+
+	// get metrics handler
 
 	err = c.SignalWorkflow(context.Background(), "hello_world_workflowID", "", "signal-name", "signal-data")
 	if err != nil {

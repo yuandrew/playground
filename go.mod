@@ -1,4 +1,4 @@
-module playground
+module github.com/yuandrew/playground
 
 go 1.23.0
 
@@ -50,3 +50,4 @@ require (
 )
 
 replace go.temporal.io/sdk => /Users/andrewyuan/temporal-sdk/go
+// replace github.com/yuandrew/playground => /Users/andrewyuan/temporal-sdk/go-playground-git
