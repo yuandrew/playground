@@ -56,16 +56,19 @@ func Workflow(ctx workflow.Context, name string) (string, error) {
 	}
 
 	// err = workflow.ExecuteActivity(ctx, Activity1, name).Get(ctx, &result)
-	// if err != nil {
-	// 	logger.Error("Activity failed.", "Error", err)
-	// 	return "", err
-	// }
+	err = workflow.Sleep(ctx, 10*time.Millisecond)
+	if err != nil {
+		logger.Error("Activity failed.", "Error", err)
+		return "", err
+	}
 
 	err = workflow.ExecuteActivity(ctx, Activity2, name).Get(ctx, &result)
 	if err != nil {
 		logger.Error("Activity failed.", "Error", err)
 		return "", err
 	}
+
+	// workflow.Sleep(ctx, 100*time.Hour)
 
 	logger.Info("HelloWorld workflow completed.", "result", result)
 
